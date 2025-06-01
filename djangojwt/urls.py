@@ -22,7 +22,8 @@ from rest_framework_simplejwt.views import (
 )
 #from myapp.views import RegisterView,LoginView,DashboadView,ResetPasswordView
 from myapp.views import *
-
+from graphene_django.views import GraphQLView
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,7 +36,7 @@ urlpatterns = [
     path('api/devices/create/', DeviceSessionCreateView.as_view(), name='create_device'),
     path('api/devices/mine/', DeviceSessionListView.as_view(), name='my_devices'),
     path('devices/mine/', MyDeviceSessionsView.as_view(), name='my-device-sessions'),
-
+    path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))),
 
     
 ]

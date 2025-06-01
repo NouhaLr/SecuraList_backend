@@ -30,6 +30,10 @@ ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'myapp.AppUser'
 
 # Application definition
+GRAPHENE = {
+    "SCHEMA": "myapp.schema.schema"  
+}
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -41,7 +45,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'myapp',
-    'corsheaders'
+    'corsheaders',
+    'graphene_django'
 ]
 
 MIDDLEWARE = [
