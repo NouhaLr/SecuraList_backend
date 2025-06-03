@@ -24,6 +24,7 @@ from rest_framework_simplejwt.views import (
 from myapp.views import *
 from graphene_django.views import GraphQLView
 from django.views.decorators.csrf import csrf_exempt
+from myapp.views import ListProductsByCategoryView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,6 +38,8 @@ urlpatterns = [
     path('api/devices/mine/', DeviceSessionListView.as_view(), name='my_devices'),
     path('devices/mine/', MyDeviceSessionsView.as_view(), name='my-device-sessions'),
     path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    path('products/create/', ProductCreateView.as_view(), name='create-product'),
+     path('products/by-category/', ListProductsByCategoryView.as_view(), name='products-by-category'),
+     path('products/', ProductListView.as_view(), name='product-list'),
 
-    
 ]

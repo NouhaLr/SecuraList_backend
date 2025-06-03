@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import DeviceSession
+from .models import DeviceSession, Product
 
 
 User = get_user_model()
@@ -49,3 +49,9 @@ class DeviceSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeviceSession
         fields = ['id', 'device_name', 'device_type', 'expires_at']
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'title', 'description', 'category']
+        read_only_fields = ['category']  

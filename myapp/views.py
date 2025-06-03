@@ -5,8 +5,9 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions
-from .models import DeviceSession
-from .serializers import DeviceSessionSerializer
+from .models import DeviceSession, Product
+from .serializers import DeviceSessionSerializer, ProductSerializer
+from rest_framework.generics import ListAPIView
 
 
 from .serializers import (
@@ -70,8 +71,19 @@ class DeviceSessionCreateView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        user = self.request.user
+        device_name = self.request.data.get("device_name")
 
+        existing = DeviceSession.objects.filter(user=user, device_name=device_name).first()
+
+        if existing:
+            # On met à jour les infos
+            existing.device_type = serializer.validated_data.get('device_type')
+            existing.expires_at = serializer.validated_data.get('expires_at')
+            existing.save()
+        else:
+            # On crée une nouvelle session
+            serializer.save(user=user)
 class DeviceSessionListView(generics.ListAPIView):
     serializer_class = DeviceSessionSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -85,3 +97,26 @@ class MyDeviceSessionsView(generics.ListAPIView):
 
     def get_queryset(self):
         return DeviceSession.objects.filter(user=self.request.user)
+    
+class ProductCreateView(generics.CreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
+    def perform_create(self, serializer):
+        
+        serializer.save(user=self.request.user)
+
+class ListProductsByCategoryView(ListAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        category = self.request.query_params.get('category', '')
+        return Product.objects.filter(user=self.request.user, category__iexact=category)
+    
+class ProductListView(ListAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Product.objects.filter(user=self.request.user)

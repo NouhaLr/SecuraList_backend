@@ -34,6 +34,10 @@ GRAPHENE = {
     "SCHEMA": "myapp.schema.schema"  
 }
 
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
